@@ -2,7 +2,6 @@ set(publicHeaderDir ${PROJECT_SOURCE_DIR}/include)
 
 set(publicHeaders
         "kine/Kine.hpp"
-        "kine/Kine.hpp"
         "kine/KineComponent.hpp"
         "kine/KineLimit.hpp"
         "kine/KineLink.hpp"
@@ -14,6 +13,7 @@ set(publicHeaders
         "kine/joints/PrismaticJoint.hpp"
         "kine/joints/RevoluteJoint.hpp"
 
+        "kine/math/Euler.hpp"
         "kine/math/MathUtils.hpp"
         "kine/math/Matrix4.hpp"
         "kine/math/Quaternion.hpp"
