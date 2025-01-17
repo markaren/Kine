@@ -9,6 +9,7 @@
 
 #include "kine/ik/CCDSolver.hpp"
 #include "kine/ik/DLSSolver.hpp"
+#include "kine/ik/DNNSolver.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
 
 using namespace threepp;
@@ -27,10 +28,11 @@ struct MyUI: ImguiContext {
         : ImguiContext(canvas.windowPtr()),
           limits(kine.limits()),
           values(kine.meanAngles()),
-          solverNames_{"CCD", "DLS"} {
+          solverNames_{"CCD", "DLS", "DNN"} {
 
         solvers_.emplace_back(std::make_unique<kine::CCDSolver>());
         solvers_.emplace_back(std::make_unique<kine::DLSSolver>());
+        solvers_.emplace_back(std::make_unique<kine::DNNSolver>("C:/dev/kine/examples/dnn/crane3r_model.onnx"));
 
         pos.setFromMatrixPosition(kine.calculateEndEffectorTransformation(values).elements);
     }
@@ -76,7 +78,8 @@ struct MyUI: ImguiContext {
         ImGui::End();
     }
 
-    kine::IKSolver& getSelectedSolver() const {
+    [[nodiscard]] kine::IKSolver& getSelectedSolver() const {
+
         return *solvers_.at(current_solver_);
     }
 
@@ -84,7 +87,7 @@ private:
     std::vector<kine::KineLimit> limits;
 
     int current_solver_ = 0;
-    const char* solverNames_[2];
+    const char* solverNames_[3];
 
     std::vector<std::unique_ptr<kine::IKSolver>> solvers_;
 };

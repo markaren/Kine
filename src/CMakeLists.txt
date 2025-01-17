@@ -7,6 +7,7 @@ set(publicHeaders
         "kine/KineLink.hpp"
 
         "kine/ik/CCDSolver.hpp"
+        "kine/ik/DNNSolver.hpp"
         "kine/ik/IKSolver.hpp"
 
         "kine/joints/KineJoint.hpp"
@@ -44,3 +45,18 @@ target_include_directories(kine
         PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}"
 )
+
+if (DEFINED ENV{ONNX_RUNTIME_DIR})
+    target_include_directories(kine PUBLIC "$ENV{ONNX_RUNTIME_DIR}/include")
+    target_link_directories(kine PUBLIC "$ENV{ONNX_RUNTIME_DIR}/lib")
+
+    if (WIN32)
+        set(ONNX_RUNTIME_LIB onnxruntime.lib)
+    else ()
+        set(ONNX_RUNTIME_LIB onnxruntime.so)
+    endif ()
+    target_link_libraries(kine PRIVATE ${ONNX_RUNTIME_LIB})
+
+    target_sources(kine PRIVATE "kine/ik/DNNSolver.cpp")
+endif ()
+
