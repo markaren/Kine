@@ -14,7 +14,7 @@ namespace kine {
         RevoluteJoint(const Vector3& axis, KineLimit limit): KineJoint(axis, limit) {}
 
         [[nodiscard]] Matrix4 getTransformation(float value) const override {
-            return Matrix4().makeRotationAxis(axis, value * DEG2RAD);
+            return Matrix4().makeRotationAxis(axis_, value * DEG2RAD);
         }
     };
 

@@ -13,20 +13,21 @@ namespace kine {
     class KineJoint: public KineComponent {
 
     public:
-        Vector3 axis;
-        KineLimit limit;
-
         KineJoint(const Vector3& axis, const KineLimit& limit)
-            : axis(axis),
-              limit(limit){};
+            : axis_(axis),
+              limit_(limit){};
 
         [[nodiscard]] float getJointValue() const {
             return value_;
         }
 
+        [[nodiscard]] const Vector3& axis() const { return axis_; }
+
+        [[nodiscard]] const KineLimit& limit() const { return limit_; }
+
         void setJointValue(float value) {
             value_ = value;
-            limit.clampWithinLimit(value_);
+            limit_.clampWithinLimit(value_);
         }
 
         [[nodiscard]] Matrix4 getTransformation() const override {
@@ -34,6 +35,10 @@ namespace kine {
         }
 
         [[nodiscard]] virtual Matrix4 getTransformation(float value) const = 0;
+
+    protected:
+        Vector3 axis_;
+        KineLimit limit_;
 
     private:
         float value_{};

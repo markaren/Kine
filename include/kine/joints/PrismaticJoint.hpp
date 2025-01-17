@@ -12,7 +12,7 @@ namespace kine {
         PrismaticJoint(const Vector3& axis, KineLimit limit): KineJoint(axis, limit) {}
 
         [[nodiscard]] Matrix4 getTransformation(float value) const override {
-            return Matrix4().makeTranslation(tmp_.copy(axis).multiplyScalar(value));
+            return Matrix4().makeTranslation(tmp_.copy(axis_).multiplyScalar(value));
         }
 
 

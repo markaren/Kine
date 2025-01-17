@@ -53,7 +53,7 @@ namespace kine {
         [[nodiscard]] std::vector<KineLimit> limits() const {
             std::vector<KineLimit> limits;
             for (unsigned i = 0; i < numDof(); i++) {
-                limits.emplace_back(joints_[i]->limit);
+                limits.emplace_back(joints_[i]->limit());
             }
             return limits;
         }
@@ -70,7 +70,7 @@ namespace kine {
         [[nodiscard]] std::vector<float> normalizeValues(const std::vector<float>& values) const {
             std::vector<float> res(numDof());
             for (unsigned i = 0; i < numDof(); ++i) {
-                res[i] = joints_[i]->limit.normalize(values[i]);
+                res[i] = joints_[i]->limit().normalize(values[i]);
             }
             return res;
         }
@@ -78,7 +78,7 @@ namespace kine {
         [[nodiscard]] std::vector<float> denormalizeValues(const std::vector<float>& values) const {
             std::vector<float> res(numDof());
             for (unsigned i = 0; i < numDof(); ++i) {
-                res[i] = joints_[i]->limit.denormalize(values[i]);
+                res[i] = joints_[i]->limit().denormalize(values[i]);
             }
             return res;
         }
