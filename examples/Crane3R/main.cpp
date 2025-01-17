@@ -111,6 +111,10 @@ int main() {
     scene->add(light1);
     scene->add(light2);
 
+    auto targetHelper = AxesHelper::create(2);
+    targetHelper->visible = false;
+    scene->add(targetHelper);
+
     HUD hud(canvas.size());
     FontLoader fontLoader;
     const auto font = fontLoader.defaultFont();
@@ -133,8 +137,6 @@ int main() {
                               .build();
 
     TaskManager tm;
-
-
     std::shared_ptr<Crane3R> crane;
     auto future = std::async([&] {
         crane = Crane3R::create();
@@ -149,6 +151,8 @@ int main() {
             endEffectorHelper->visible = true;
         });
     });
+
+    auto ikSolver = std::make_unique<kine::CCDSolver>();
 
 
     canvas.onWindowResize([&](WindowSize size) {
@@ -165,28 +169,21 @@ int main() {
     };
     canvas.setIOCapture(&capture);
 
-    auto ikSolver = std::make_unique<kine::CCDSolver>();
-
-    MyUI ui(canvas, kine);
-
-    auto targetHelper = AxesHelper::create(2);
-    targetHelper->visible = false;
-    scene->add(targetHelper);
-
     Clock clock;
+    MyUI ui(canvas, kine);
     canvas.animate([&]() {
         const auto dt = clock.getDelta();
 
-        tm.handleTasks();
-
         renderer.clear();
         renderer.render(*scene, *camera);
+
+        tm.handleTasks();
 
         if (crane) {
 
             ui.render();
 
-            auto endEffectorPosition = kine.calculateEndEffectorTransformation(inDegrees(crane->getValues()));
+            const auto endEffectorPosition = kine.calculateEndEffectorTransformation(inDegrees(crane->getValues()));
             endEffectorHelper->position.setFromMatrixPosition(endEffectorPosition.elements);
 
             targetHelper->position.copy(ui.pos);
@@ -211,7 +208,5 @@ int main() {
         }
     });
 
-#ifndef EMSCRIPTEN
     future.get();
-#endif
 }
