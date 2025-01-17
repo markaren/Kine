@@ -6,6 +6,8 @@
 #include <cmath>
 #include <optional>
 
+#include "kine/math/MathUtils.hpp"
+
 namespace kine {
 
     class KineLimit {

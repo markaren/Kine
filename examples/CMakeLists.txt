@@ -13,4 +13,5 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(threepp)
 
 add_subdirectory(Crane3R)
+add_subdirectory(dnn)
 add_subdirectory(external)

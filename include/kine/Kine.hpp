@@ -32,14 +32,19 @@ namespace kine {
             return joints_.size();
         }
 
-        [[nodiscard]] Matrix4 calculateEndEffectorTransformation(const std::vector<float>& values) const {
+        [[nodiscard]] Matrix4 calculateEndEffectorTransformation(const std::vector<float>& values, bool normalized = false) const {
 
             Matrix4 result;
             for (unsigned i = 0, j = 0; i < components_.size(); ++i) {
                 const auto& c = components_[i];
                 if (const auto joint = dynamic_cast<KineJoint*>(c.get())) {
-                    result.multiply(joint->getTransformation(values.at(j++)));
+                    auto value = values.at(j++);
+                    if (normalized) {
+                        value = joint->limit().denormalize(value);
+                    }
+                    result.multiply(joint->getTransformation(value));
                 } else {
+
                     result.multiply(c->getTransformation());
                 }
             }
