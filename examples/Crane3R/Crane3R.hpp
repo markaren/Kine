@@ -1,5 +1,5 @@
-#ifndef THREEPP_CRANE3R_HPP
-#define THREEPP_CRANE3R_HPP
+#ifndef KINE_CRANE3R_HPP
+#define KINE_CRANE3R_HPP
 
 #include "threepp/objects/Group.hpp"
 
@@ -11,13 +11,13 @@
 #include <utility>
 
 
-class Crane3R : public threepp::Group {
+class Crane3R: public threepp::Group {
 public:
     bool controllerEnabled = false;
 
     [[nodiscard]] std::vector<kine::Angle> getValues() const;
 
-    void setTargetValues(const std::vector<kine::Angle> &values);
+    void setTargetValues(const std::vector<kine::Angle>& values);
 
     void update(float dt);
 
@@ -31,28 +31,28 @@ private:
             POSITION
         };
 
-        explicit Controller(const Crane3R &c);
+        explicit Controller(const Crane3R& c);
 
         void update(float dt);
 
-        void setGains(const std::vector<float> &values);
+        void setGains(const std::vector<float>& values);
 
-        void setTargetValues(const std::vector<kine::Angle> &values);
+        void setTargetValues(const std::vector<kine::Angle>& values);
 
     private:
         ControlMode mode_{DIRECT};
 
-        std::array<PIDRegulator, 3> pids_{};
+        std::array<kine::PIDRegulator, 3> pids_{};
         std::array<float, 3> targetValues{};
         std::array<std::unique_ptr<kine::Actuator>, 3> actuators_{};
     };
 
     std::unique_ptr<Controller> controller_;
-    std::array<threepp::Object3D *, 3> parts_{};
-    std::array<std::pair<threepp::Object3D *, threepp::Object3D *>, 2> cylinders_{};
+    std::array<Object3D*, 3> parts_{};
+    std::array<std::pair<Object3D*, Object3D*>, 2> cylinders_{};
 
-    explicit Crane3R(const std::shared_ptr<threepp::Group> &obj);
+    explicit Crane3R(const std::shared_ptr<Group>& obj);
 };
 
 
-#endif//THREEPP_CRANE3R_HPP
+#endif//KINE_CRANE3R_HPP

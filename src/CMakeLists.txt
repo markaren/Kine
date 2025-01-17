@@ -35,4 +35,12 @@ set(sources
 
 
 add_library(kine ${sources} ${publicHeadersFull})
-target_include_directories(kine PUBLIC "${PROJECT_SOURCE_DIR}/include")
+add_library(kine::kine ALIAS kine)
+target_compile_features(kine PUBLIC "cxx_std_20")
+target_include_directories(kine
+        PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+        PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}"
+)

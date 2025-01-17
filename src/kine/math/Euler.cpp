@@ -29,7 +29,7 @@ Euler& Euler::set(float x, float y, float z, const std::optional<RotationOrders>
     this->y = y;
     this->z = z;
     this->order_ = order.value_or(this->order_);
-    
+
     return *this;
 }
 

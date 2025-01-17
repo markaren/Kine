@@ -1,4 +1,3 @@
-
 #ifndef KINE_IKSOLVER_HPP
 #define KINE_IKSOLVER_HPP
 
@@ -9,12 +8,9 @@ namespace kine {
     class IKSolver {
 
     public:
-
         virtual std::vector<float> solveIK(const Kine& kine, const Vector3& target, const std::vector<float>& startValues) = 0;
 
-        void setEPS(float eps) {
-            eps_ = eps;
-        }
+        void setEPS(float eps) { eps_ = eps; }
 
         virtual ~IKSolver() = default;
 

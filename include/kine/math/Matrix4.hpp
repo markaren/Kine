@@ -153,6 +153,6 @@ namespace kine {
         }
     };
 
-}// namespace threepp
+}// namespace kine
 
 #endif//KINE_MATRIX4_HPP

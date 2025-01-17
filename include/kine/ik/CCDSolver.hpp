@@ -1,4 +1,3 @@
-
 #ifndef KINE_CCDSOLVER_HPP
 #define KINE_CCDSOLVER_HPP
 
@@ -25,7 +24,6 @@ namespace kine {
             unsigned int tries = 0;
             std::vector<float> newValues = kine.normalizeValues(startValues);
             while (true) {
-
                 for (unsigned i = 0; i < kine.numDof(); ++i) {
                     float closest = std::numeric_limits<float>::max();
                     float k = 0;

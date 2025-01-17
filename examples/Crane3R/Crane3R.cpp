@@ -1,4 +1,3 @@
-
 #include "Crane3R.hpp"
 
 #include "threepp/geometries/CylinderGeometry.hpp"
@@ -61,7 +60,6 @@ namespace {
     void updateCylinders(std::array<std::pair<Object3D*, Object3D*>, 2> cylinders) {
         Vector3 tmp;
         for (const auto& cylinder : cylinders) {
-
             auto house = cylinder.first;
             auto rod = cylinder.second;
 
@@ -140,7 +138,6 @@ std::vector<kine::Angle> Crane3R::getValues() const {
 }
 
 void Crane3R::setTargetValues(const std::vector<kine::Angle>& values) {
-
     if (controllerEnabled) {
         controller_->setTargetValues(values);
     } else {
@@ -154,9 +151,7 @@ void Crane3R::update(float dt) {
 
     updateCylinders(cylinders_);
 
-    if (controllerEnabled) {
-        controller_->update(dt);
-    }
+    if (controllerEnabled) { controller_->update(dt); }
 }
 
 Crane3R::Controller::Controller(const Crane3R& c) {
@@ -167,16 +162,12 @@ Crane3R::Controller::Controller(const Crane3R& c) {
 
 void Crane3R::Controller::setGains(const std::vector<float>& values) {
     mode_ = DIRECT;
-    for (unsigned i = 0; i < actuators_.size(); ++i) {
-        actuators_[i]->setGain(values[i]);
-    }
+    for (unsigned i = 0; i < actuators_.size(); ++i) { actuators_[i]->setGain(values[i]); }
 }
 
 void Crane3R::Controller::setTargetValues(const std::vector<kine::Angle>& values) {
     mode_ = POSITION;
-    for (unsigned i = 0; i < 3; ++i) {
-        targetValues[i] = values[i].inRadians();
-    }
+    for (unsigned i = 0; i < 3; ++i) { targetValues[i] = values[i].inRadians(); }
 }
 
 void Crane3R::Controller::update(float dt) {
@@ -190,12 +181,8 @@ void Crane3R::Controller::update(float dt) {
             act->setGain(gain);
         }
     } else {
-        for (unsigned i = 0; i < 3; ++i) {
-            targetValues[i] = actuators_[i]->getProcessOutput();
-        }
+        for (unsigned i = 0; i < 3; ++i) { targetValues[i] = actuators_[i]->getProcessOutput(); }
     }
 
-    for (auto& actuator : actuators_) {
-        actuator->update();
-    }
+    for (auto& actuator : actuators_) { actuator->update(); }
 }

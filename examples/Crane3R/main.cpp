@@ -1,9 +1,9 @@
 
 #include "Crane3R.hpp"
 
+#include "Angle.hpp"
 #include "kine/Kine.hpp"
 #include "threepp/threepp.hpp"
-#include "Angle.hpp"
 
 #include <future>
 
@@ -124,13 +124,13 @@ int main() {
                             .setVerticalAlignment(HUD::VerticalAlignment::CENTER));
 
     kine::Kine kine = kine::KineBuilder()
-                        .addRevoluteJoint(Vector3::Y(), {-90.f, 90.f})
-                        .addLink(Vector3::Y() * 4.2)
-                        .addRevoluteJoint(Vector3::X(), {-80.f, 0.f})
-                        .addLink(Vector3::Z() * 7)
-                        .addRevoluteJoint(Vector3::X(), {40.f, 140.f})
-                        .addLink(Vector3::Z() * 5.2)
-                        .build();
+                              .addRevoluteJoint(Vector3::Y(), {-90.f, 90.f})
+                              .addLink(Vector3::Y() * 4.2)
+                              .addRevoluteJoint(Vector3::X(), {-80.f, 0.f})
+                              .addLink(Vector3::Z() * 7)
+                              .addRevoluteJoint(Vector3::X(), {40.f, 140.f})
+                              .addLink(Vector3::Z() * 5.2)
+                              .build();
 
     TaskManager tm;
 

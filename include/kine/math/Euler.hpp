@@ -61,7 +61,7 @@ namespace kine {
 
             this->x = array[offset];
             this->y = array[offset + 1];
-            this->z= array[offset + 2];
+            this->z = array[offset + 2];
 
             return *this;
         }
@@ -73,7 +73,6 @@ namespace kine {
             array[offset + 1] = this->y;
             array[offset + 2] = this->z;
         }
-
 
     private:
         RotationOrders order_ = default_order;

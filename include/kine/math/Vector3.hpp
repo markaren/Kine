@@ -33,13 +33,12 @@ namespace kine {
         Vector3(float x, float y, float z);
 
         template<typename T>
-            requires requires(T t)
-        {
-            { t.x } -> std::convertible_to<float>;
-            { t.y } -> std::convertible_to<float>;
-            { t.z } -> std::convertible_to<float>;
-        }
-        Vector3(const T &other)
+            requires requires(T t) {
+                { t.x } -> std::convertible_to<float>;
+                { t.y } -> std::convertible_to<float>;
+                { t.z } -> std::convertible_to<float>;
+            }
+        Vector3(const T& other)
             : x(static_cast<float>(other.x)),
               y(static_cast<float>(other.y)),
               z(static_cast<float>(other.z)) {
@@ -279,6 +278,6 @@ namespace kine {
             return p.z;
     }
 
-}// namespace threepp
+}// namespace kine
 
 #endif//KINE_VECTOR3_HPP

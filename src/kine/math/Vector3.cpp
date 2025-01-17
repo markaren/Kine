@@ -6,9 +6,9 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numbers>
 #include <stdexcept>
 #include <string>
-#include <numbers>
 
 using namespace kine;
 

@@ -3,6 +3,8 @@ file(COPY "data/" DESTINATION "${CMAKE_BINARY_DIR}/bin/data/")
 
 set(THREEPP_BUILD_TESTS OFF)
 set(THREEPP_BUILD_EXAMPLES OFF)
+set(THREEPP_WITH_AUDIO OFF)
+set(THREEPP_WITH_SVG OFF)
 FetchContent_Declare(
         threepp
         GIT_REPOSITORY https://github.com/markaren/threepp.git

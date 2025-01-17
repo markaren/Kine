@@ -20,6 +20,6 @@ namespace kine {
     // Converts radians to degrees.
     float radToDeg(float radians);
 
-}
+}// namespace kine
 
-#endif //KINE_MATHUTILS_HPP
+#endif//KINE_MATHUTILS_HPP
