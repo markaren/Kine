@@ -8,6 +8,7 @@
 #include <future>
 
 #include "kine/ik/CCDSolver.hpp"
+#include "kine/ik/DLSSolver.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
 
 using namespace threepp;
@@ -20,13 +21,16 @@ struct MyUI: ImguiContext {
     bool enableController = false;
 
     Vector3 pos;
-    std::vector<kine::KineLimit> limits;
     std::vector<float> values;
 
     explicit MyUI(const Canvas& canvas, kine::Kine& kine)
         : ImguiContext(canvas.windowPtr()),
           limits(kine.limits()),
-          values(kine.meanAngles()) {
+          values(kine.meanAngles()),
+          solverNames_{"CCD", "DLS"} {
+
+        solvers_.emplace_back(std::make_unique<kine::CCDSolver>());
+        solvers_.emplace_back(std::make_unique<kine::DLSSolver>());
 
         pos.setFromMatrixPosition(kine.calculateEndEffectorTransformation(values).elements);
     }
@@ -36,6 +40,16 @@ struct MyUI: ImguiContext {
         ImGui::SetNextWindowPos({}, 0, {});
         ImGui::SetNextWindowSize({}, 0);
         ImGui::Begin("Crane3R");
+
+        if (ImGui::BeginCombo("IK Solver", solverNames_[current_solver_])) {
+            for (int i = 0; i < IM_ARRAYSIZE(solverNames_); i++) {
+                const bool isSelected = (current_solver_ == i);
+                if (ImGui::Selectable(solverNames_[i], isSelected)) {
+                    current_solver_ = i;
+                }
+            }
+            ImGui::EndCombo();
+        }
 
         ImGui::Text("Target angles");
         ImGui::SliderFloat("j1", &values[0], *limits[0].min(), *limits[0].max());
@@ -61,6 +75,18 @@ struct MyUI: ImguiContext {
 
         ImGui::End();
     }
+
+    kine::IKSolver& getSelectedSolver() const {
+        return *solvers_.at(current_solver_);
+    }
+
+private:
+    std::vector<kine::KineLimit> limits;
+
+    int current_solver_ = 0;
+    const char* solverNames_[2];
+
+    std::vector<std::unique_ptr<kine::IKSolver>> solvers_;
 };
 
 auto createGrid() {
@@ -152,8 +178,6 @@ int main() {
         });
     });
 
-    auto ikSolver = std::make_unique<kine::CCDSolver>();
-
 
     canvas.onWindowResize([&](WindowSize size) {
         camera->aspect = size.aspect();
@@ -193,7 +217,7 @@ int main() {
                 targetHelper->visible = false;
             }
             if (ui.posMode) {
-                ui.values = ikSolver->solveIK(kine, ui.pos, inDegrees(crane->getValues()));
+                ui.values = ui.getSelectedSolver().solveIK(kine, ui.pos, inDegrees(crane->getValues()));
                 targetHelper->visible = true;
             }
 

@@ -14,11 +14,10 @@ namespace kine {
         explicit DLSSolver(double lambda = 0.5)
             : lambdaSq_(lambda * lambda) {}
 
-        std::vector<float> solveIK(const Kine& kine, const threepp::Vector3& target, const std::vector<float>& startValues) override {
+        std::vector<float> solveIK(const Kine& kine, const Vector3& target, const std::vector<float>& startValues) override {
 
             auto vals = startValues;
 
-            float error;
             threepp::Vector3 vec;
             Eigen::MatrixX<double> mat;
             for (int i = 0; i < 100; ++i) {
@@ -26,9 +25,9 @@ namespace kine {
                 auto j = computeJacobian(kine, vals);
 
                 auto m = kine.calculateEndEffectorTransformation(vals);
-                auto& actual = vec.setFromMatrixPosition(m);
+                auto& actual = vec.setFromMatrixPosition(m.elements);
 
-                error = actual.distanceTo(target);
+                const float error = actual.distanceTo(target);
                 if (error < this->eps_) break;
 
                 Eigen::Vector3<double> delta{target.x - actual.x, target.y - actual.y, target.z - actual.z};
@@ -39,7 +38,8 @@ namespace kine {
                 for (int k = 0; k < kine.numDof(); ++k) {
 
                     vals[k] += static_cast<float>(theta_dot[k]);
-                    kine.joints()[k]->limit.clampWithinLimit(vals[k]);
+                    const KineLimit& lim = kine.joints()[k]->limit();
+                    lim.clampWithinLimit(vals[k]);
                 }
             }
 
