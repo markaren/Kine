@@ -32,11 +32,11 @@ namespace kine {
 
         [[nodiscard]] float normalize(float value) const {
             clampWithinLimit(value);
-            return threepp::math::mapLinear(value, min_.value_or(-std::numeric_limits<float>::max()), max_.value_or(std::numeric_limits<float>::max()), 0, 1);
+            return mapLinear(value, min_.value_or(-std::numeric_limits<float>::max()), max_.value_or(std::numeric_limits<float>::max()), 0, 1);
         }
 
         [[nodiscard]] float denormalize(float value) const {
-            return threepp::math::mapLinear(std::clamp(value, 0.f, 1.f), 0, 1, min_.value_or(-std::numeric_limits<float>::max()), max_.value_or(std::numeric_limits<float>::max()));
+            return mapLinear(std::clamp(value, 0.f, 1.f), 0, 1, min_.value_or(-std::numeric_limits<float>::max()), max_.value_or(std::numeric_limits<float>::max()));
         }
 
         bool clampWithinLimit(float& value) const {
