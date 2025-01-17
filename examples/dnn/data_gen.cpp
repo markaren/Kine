@@ -9,14 +9,13 @@
 #include <source_location>
 
 std::vector<float> generateRandomVector(size_t len) {
-    std::vector<float> result(len);
 
     // Random number generator
-    static std::random_device rd;                                               // Seed generator
-    static std::mt19937 gen(rd());                                           // Mersenne Twister RNG
-    std::uniform_real_distribution<float> dist(0.f, 1.0f);   // Range [0, 1]
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<float> dist(0.f, 1.0f);
 
-    // Fill the vector with random values
+    std::vector<float> result(len);
     for (size_t i = 0; i < len; ++i) {
         result[i] = dist(gen);
     }
@@ -53,7 +52,7 @@ void generateTrainingData(const kine::Kine& kine, const std::filesystem::path& p
 
 int main() {
 
-    kine::Kine kine = kine::KineBuilder()
+    const auto kine = kine::KineBuilder()
                               .addRevoluteJoint(kine::Vector3::Y(), {-90.f, 90.f})
                               .addLink(kine::Vector3::Y() * 4.2)
                               .addRevoluteJoint(kine::Vector3::X(), {-80.f, 0.f})
