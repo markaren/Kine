@@ -23,6 +23,7 @@ y_val = torch.tensor(y_val, dtype=torch.float32).to(device)
 
 # Instantiate the model, define loss and optimizer
 from net import InverseKinematicsNet
+
 model = InverseKinematicsNet().to(device)
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -50,4 +51,20 @@ for epoch in range(epochs):
         print(f"Epoch {epoch}, Training Loss: {loss.item()}, Validation Loss: {val_loss.item()}")
 
 # Save the trained model
-torch.save(model.state_dict(), "crane3r_model.pth")
+model_name = "crane3r_model"
+
+# Export the model in pytorch format
+torch.save(model.state_dict(), f"{model_name}.pth")
+
+# Export the model to ONNX format
+onnx_file_path = f"{model_name}.onnx"
+torch.onnx.export(
+    model,  # Model to export
+    torch.tensor(np.zeros(3), dtype=torch.float32).unsqueeze(0).to(device),  # Dummy input tensor
+    onnx_file_path,  # Path to save the ONNX model
+    export_params=True,  # Store trained weights in the model
+    opset_version=11,  # ONNX opset version
+    do_constant_folding=True,  # Optimize constant folding for inference
+    input_names=["input"],  # Name of the input layer
+    output_names=["output"]  # Name of the output layer
+)
