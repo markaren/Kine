@@ -52,6 +52,7 @@ void generateTrainingData(const kine::Kine& kine, const std::filesystem::path& p
 
 int main() {
 
+    // Crane3R
     const auto kine = kine::KineBuilder()
                               .addRevoluteJoint(kine::Vector3::Y(), {-90.f, 90.f})
                               .addLink(kine::Vector3::Y() * 4.2)
@@ -63,8 +64,8 @@ int main() {
 
     const auto loc = std::source_location::current();
     std::filesystem::path currentFolder = std::filesystem::path(loc.file_name()).parent_path();
-    std::filesystem::path trainingFolder = currentFolder / "training";
+    std::filesystem::path trainingFolder = currentFolder / "training/crane3r";
     create_directories(trainingFolder);
 
-    generateTrainingData(kine, trainingFolder / "positions.csv", trainingFolder / "angles.csv", 10000);
+    generateTrainingData(kine, trainingFolder / "positions.csv", trainingFolder / "values.csv", 100000);
 }

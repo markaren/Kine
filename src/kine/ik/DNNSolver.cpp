@@ -10,18 +10,18 @@ using namespace kine;
 struct DNNSolver::Impl {
 
     Impl(const std::filesystem::path& model)
-        : env_(ORT_LOGGING_LEVEL_WARNING, "ONNX IK"), input_data_(3) {
-
-        Ort::SessionOptions session_options;
-        session_options.SetIntraOpNumThreads(1);
-        session_options.SetGraphOptimizationLevel(ORT_ENABLE_EXTENDED);
-
-        Ort::GetApi().GetAllocatorWithDefaultOptions(&allocator);
-
-        session_ = std::make_unique<Ort::Session>(env_, model.c_str(), session_options);
-    }
+        : env_(ORT_LOGGING_LEVEL_WARNING, "ONNX IK"),
+          input_data_(3),
+          model_(model) {}
 
     std::vector<float> solveIK(const Kine& kine, const Vector3& target, const std::vector<float>&) {
+
+        if (!session_) {
+            Ort::SessionOptions session_options;
+            session_options.SetIntraOpNumThreads(1);
+            session_options.SetGraphOptimizationLevel(ORT_ENABLE_EXTENDED);
+            session_ = std::make_unique<Ort::Session>(env_, model_.c_str(), session_options);
+        }
 
         const char* input_names[] = {"input"};
         const char* output_names[] = {"output"};
@@ -47,11 +47,11 @@ struct DNNSolver::Impl {
         );
 
         // Process output
-        auto* output_data = output_tensors[0].GetTensorMutableData<float>();
+        const auto* output_data = output_tensors[0].GetTensorMutableData<float>();
 
         // Convert the data to a vector
-        std::vector<float> output_vector(3);
-        for (size_t i = 0; i < 3; i++) {
+        std::vector<float> output_vector(kine.numDof());
+        for (size_t i = 0; i < kine.numDof(); i++) {
             output_vector[i] = output_data[i];
         }
 
@@ -62,7 +62,8 @@ private:
     Ort::Env env_;
     std::vector<float> input_data_;
     std::unique_ptr<Ort::Session> session_;
-    OrtAllocator* allocator;
+
+    std::filesystem::path model_;
 };
 
 DNNSolver::DNNSolver(const std::filesystem::path& model)

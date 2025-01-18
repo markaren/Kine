@@ -4,13 +4,16 @@ import torch.optim as optim
 import numpy as np
 from sklearn.model_selection import train_test_split
 
+# Save the trained model
+model_name = "crane3r"
+
 # Check if a GPU is available, otherwise use the CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # Load data
-positions = np.loadtxt("training/positions.csv", delimiter=",")
-angles = np.loadtxt("training/angles.csv", delimiter=",")
+positions = np.loadtxt(f"training/{model_name}/positions.csv", delimiter=",")
+angles = np.loadtxt(f"training/{model_name}/values.csv", delimiter=",")
 
 # Split data into training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(positions, angles, test_size=0.2, random_state=42)
@@ -29,7 +32,7 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # Train the model
-epochs = 10000
+epochs = 50000
 for epoch in range(epochs):
     model.train()
     optimizer.zero_grad()
@@ -47,11 +50,14 @@ for epoch in range(epochs):
         val_outputs = model(X_val)
         val_loss = criterion(val_outputs, y_val)
 
-    if epoch % 100 == 0:
-        print(f"Epoch {epoch}, Training Loss: {loss.item()}, Validation Loss: {val_loss.item()}")
+    validation_loss = val_loss.item()
+    if epoch % 1000 == 0:
+        print(f"Epoch {epoch}, Training Loss: {loss.item()}, Validation Loss: {validation_loss}")
 
-# Save the trained model
-model_name = "crane3r_model"
+    if validation_loss < 0.1:
+        print(f"Achieved suitable training performance after {epoch} epochs ({validation_loss}). Aborting training early..")
+        break
+
 
 # Export the model in pytorch format
 torch.save(model.state_dict(), f"{model_name}.pth")

@@ -2,7 +2,7 @@ import torch
 from net import InverseKinematicsNet
 
 model = InverseKinematicsNet()
-model.load_state_dict(torch.load("crane3r_model.pth", weights_only=True))
+model.load_state_dict(torch.load("crane3r.pth", weights_only=True))
 model.eval()
 
 # Test the model

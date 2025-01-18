@@ -32,7 +32,7 @@ struct MyUI: ImguiContext {
 
         solvers_.emplace_back(std::make_unique<kine::CCDSolver>());
         solvers_.emplace_back(std::make_unique<kine::DLSSolver>());
-        solvers_.emplace_back(std::make_unique<kine::DNNSolver>("data/Crane3R/crane3r_model.onnx"));
+        solvers_.emplace_back(std::make_unique<kine::DNNSolver>("data/Crane3R/crane3r.onnx"));
 
         pos.setFromMatrixPosition(kine.calculateEndEffectorTransformation(values).elements);
     }
