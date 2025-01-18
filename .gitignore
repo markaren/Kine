@@ -3,6 +3,6 @@ cmake-build-*
 
 *.pt
 *.pth
-*.onnx
+examples/dnn/*.onnx
 
 **/training

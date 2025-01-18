@@ -24,7 +24,7 @@ struct MyUI: ImguiContext {
     Vector3 pos;
     std::vector<float> values;
 
-    explicit MyUI(const Canvas& canvas, kine::Kine& kine)
+    explicit MyUI(const Canvas& canvas, const kine::Kine& kine)
         : ImguiContext(canvas.windowPtr()),
           limits(kine.limits()),
           values(kine.meanAngles()),
@@ -32,7 +32,7 @@ struct MyUI: ImguiContext {
 
         solvers_.emplace_back(std::make_unique<kine::CCDSolver>());
         solvers_.emplace_back(std::make_unique<kine::DLSSolver>());
-        solvers_.emplace_back(std::make_unique<kine::DNNSolver>("C:/dev/kine/examples/dnn/crane3r_model.onnx"));
+        solvers_.emplace_back(std::make_unique<kine::DNNSolver>("data/Crane3R/crane3r_model.onnx"));
 
         pos.setFromMatrixPosition(kine.calculateEndEffectorTransformation(values).elements);
     }
