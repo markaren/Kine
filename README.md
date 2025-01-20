@@ -40,8 +40,8 @@ The deep learning module is based on PyTorch and ONNX runtime.
 
 The DNN module is located in `examples/dnn`.
 
-Install PyTorch per [instructions](https://pytorch.org/)
-Install further libraries listed in `requirements.txt`
+- Install PyTorch per [instructions](https://pytorch.org/)
+- Install further libraries listed in `requirements.txt`
 
 #### Setting up onnxruntime
 
