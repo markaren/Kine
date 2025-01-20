@@ -58,5 +58,5 @@ if (DEFINED ENV{ONNX_RUNTIME_DIR})
     target_link_libraries(kine PRIVATE ${ONNX_RUNTIME_LIB})
 
     target_sources(kine PRIVATE "kine/ik/DNNSolver.cpp")
+    target_compile_definitions(kine PUBLIC KINE_WITH_DNN)
 endif ()
-

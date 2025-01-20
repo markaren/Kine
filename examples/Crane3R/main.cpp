@@ -28,11 +28,14 @@ struct MyUI: ImguiContext {
         : ImguiContext(canvas.windowPtr()),
           limits(kine.limits()),
           values(kine.meanAngles()),
-          solverNames_{"CCD", "DLS", "DNN"} {
+          solverNames_{"CCD", "DLS"} {
 
         solvers_.emplace_back(std::make_unique<kine::CCDSolver>());
         solvers_.emplace_back(std::make_unique<kine::DLSSolver>());
+#ifdef KINE_WITH_DNN
         solvers_.emplace_back(std::make_unique<kine::DNNSolver>("data/Crane3R/crane3r.onnx"));
+        solverNames_.emplace_back("DNN");
+#endif
 
         pos.setFromMatrixPosition(kine.calculateEndEffectorTransformation(values).elements);
     }
@@ -44,7 +47,7 @@ struct MyUI: ImguiContext {
         ImGui::Begin("Crane3R");
 
         if (ImGui::BeginCombo("IK Solver", solverNames_[current_solver_])) {
-            for (int i = 0; i < IM_ARRAYSIZE(solverNames_); i++) {
+            for (int i = 0; i < solverNames_.size(); i++) {
                 const bool isSelected = (current_solver_ == i);
                 if (ImGui::Selectable(solverNames_[i], isSelected)) {
                     current_solver_ = i;
@@ -87,7 +90,7 @@ private:
     std::vector<kine::KineLimit> limits;
 
     int current_solver_ = 0;
-    const char* solverNames_[3];
+    std::vector<const char*> solverNames_;
 
     std::vector<std::unique_ptr<kine::IKSolver>> solvers_;
 };
