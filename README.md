@@ -4,7 +4,7 @@
 
 
 Kine is a simple kinematics library, 
-allowing users to describe generic kinematics chains in a simple an intuitive way.
+allowing users to describe generic kinematics chains in a simple and intuitive way.
 
 ```cpp
 kine::Kine kine = kine::KineBuilder()
@@ -48,3 +48,4 @@ Install further libraries listed in `requirements.txt`
 1. Download and extract binaries from https://github.com/microsoft/onnxruntime 
 2. Add an ENV variable `ONNX_RUNTIME_DIR` pointing to the extracted folder. 
 3. Add the shared library `onnxruntime.xx` to PATH.
+    - NOTE: On WIN11 there is likely a `onnxruntime.dll` in System32 folder that is loaded first - leading to issues. To avoid this manually copy the .dll into the projects binary directory.
